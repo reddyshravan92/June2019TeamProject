@@ -1,0 +1,175 @@
+C#
+
+OOP
+
+
+Class
+	properties/fields
+
+	static (class member) /non-static(instance)
+
+e.g.
+	public class Person
+	{
+		public string Name {get;set;} //instance member
+
+		public static string Location { get;set;} //static/class member
+	}
+
+if you create non-static field, we can access with an instance.
+
+if you create with static fiel, we can can access directly with className.
+
+=============
+
+fields / properties
+
+private/public/protected/internal/internal protected
+
+e.g.
+
+public class Person
+{	
+	public int Id{get;set;}
+
+	private string FirstName {get;set;}
+	
+	protected string Email {get;set;}
+}
+
+
+publi class Customer : Person
+{
+	public string Location {get;set;}
+
+	//Email 
+}
+
+public class Employee : Person
+{	
+	public string Address{get;set;}
+
+	//Email
+}
+
+
+e.g
+Person p = new Person();
+	p.Id 
+	p.FirstName // error
+
+Customer cust = new Customer();
+	cust.Id
+	cust.Location
+	cust.Email //Error 
+
+Emplyoee emp= new Employee();
+	emp.Id
+	emp.Address
+	emp.Email //Error
+
+
+e.g. 
+	property/field :
+
+
+field: no automatic initialization
+
+property(auto properties) : auto initializaiton
+
+============
+
+constructor:
+
+static /non-static constuctor 
+
+
+constructor: (instance constructor)
+	should be as same classname
+	no return type
+	should be public (private constructor , can't be instantite)
+	can accept parameters
+
+
+
+static constructor:
+
+		must use "static"
+		No return type
+		no modifier 
+		no parameter
+		same as "classname"
+
+
+
+	e.g.
+	public class Customer
+	{
+		public static Location {get;set;}
+
+		static Customer()
+		{
+			this.Location = "RI";
+		}
+	}
+
+static /non-static constuctor :
+	
+	static : 
+		no overloading 
+		no instance
+		
+	non-static
+		overloading 
+		instance
+
+============
+Enum
+
+e.g.
+	public enum BlogType
+	{
+		Public = 1, Private = 0
+	}
+
+
+asynchronous programing:
+	Task
+		(System.Threading)
+	async
+	await
+
+Delegate
+==========
+
+Git 
+	Team project
+
+================
+Today's Objectives:
+* Nullable Operator  (?)
+* Coalesce Operator (?)
+* Null check  (.?)
+* Inheritane
+* Extension method
+* Polymorhphism(overloading, overriding, virtual , abstract, sealed, partial)
+* Interface and abstrract class
+* Delegates
+
+
+
+Github:
+	Team Project
+		track work items (issues)
+		Repository (source)
+
+Jira
+	version control
+	issue tracking 
+
+
+ADO ( Azure DevOps)
+	Version control
+	Issue tracking
+
+

@@ -148,7 +148,7 @@ Git
 ================
 Today's Objectives:
 * Nullable Operator  (?)
-* Coalesce Operator (?)
+* Coalesce Operator (??)
 * Null check  (.?)
 * Inheritane
 * Extension method
@@ -171,5 +171,95 @@ Jira
 ADO ( Azure DevOps)
 	Version control
 	Issue tracking
+
+
+====================
+Nullable Operator : ?
+
+Primitive type
+	int 
+	double
+	decimal
+	DateTime
+	float
+	..
+	..
+
+Value Type : 
+	We store value directly 
+	They don't access null values
+	e.g.
+		int value = 1000;
+		int value1 = null;//error
+
+
+Reference type 
+	We assign the reference(address)
+	we can store even null value here.
+
+e.g.
+	string name = null;
+	
+All the user defined types are : reference types(class, interface, delegate)
+enum, struct : are value types
+
+We can make use of "?" to convert value type to "nullable type"
+
+e..g
+	int? value = null;
+	DateTime? today = null;
+
+
+We can make use "??" to check for null. 
+	e.g
+	int? value = null;
+	int result = value ?? 100;
+
+
+We can make use "?." to null check on objects
+e.g.
+	List<string> list = null;
+		list?.Add("satya");
+=======================
+Inheritance:
+	Extensibility 
+
+
+e.g. 
+	Store
+		
+
+	Person 
+		Id
+		Name
+		...		
+	Customer : Person
+		Orders
+
+	
+	Employee : Person
+		Salary
+
+Naming convention:
+class/interface/enum/struct/method/property
+	PascalCase
+
+private field: _camelCase
+	_fieldName
+
+paramter : camelCase
+	parameterName
+	
+
+Overloading:
+	Write multiple methods with same name, but different arguments(type or number of arguments)
+
+
+overriding:
+
+
+
+
+
 
 

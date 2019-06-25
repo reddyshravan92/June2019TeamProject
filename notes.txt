@@ -256,6 +256,32 @@ Overloading:
 
 
 overriding:
+======================================================================================
+git clone "url"
+
+
+git checkout -b "branchName"
+
+
+add files
+..
+..
+..
+
+
+git commit -a -m "commit message"
+
+
+git push
+
+...
+git checkout master
+git pull
+
+git checkout -b "newbranch"
+
+
+=======================
 
 
 

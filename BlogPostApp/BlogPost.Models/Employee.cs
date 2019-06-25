@@ -6,7 +6,26 @@ namespace BlogPost.Models
 {
     public class Employee : Person
     {
-        public decimal Salary { get; set; }
+        private decimal _Salary;
+        public decimal Salary
+        {
+            get
+            {
+                return _Salary;
+            }
+
+            set
+            {
+                if(value < 5000)
+                {
+                    throw new CustomException("Amount should be more than 5000");
+                }
+                else
+                {
+                    this._Salary = value;
+                }
+            }
+        }
         public Employee(int id, string firstName, string lastName, string email, decimal salary) : base(id, firstName, lastName, email)
         {
             this.Salary = salary;

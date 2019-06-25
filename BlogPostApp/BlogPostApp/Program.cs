@@ -51,14 +51,56 @@ namespace BlogPostApp
             //Console.WriteLine(math.Concate("hello", "world"));
 
 
-            Person p = new Person(1, "John", "Smith", "John@gmail.com");
-            Console.WriteLine(p.GetInfo());
+            //Person p = new Person(1, "John", "Smith", "John@gmail.com");
+            //Console.WriteLine(p.GetInfo());
 
-            Person emp = new Employee(1, "Scott", "John", "sctot@gmaic.com", 3343);
-            Console.WriteLine(emp.GetInfo());
+            //Person emp = new Employee(1, "Scott", "John", "sctot@gmaic.com", 3343);
+            //Console.WriteLine(emp.GetInfo());
 
-            Person cust = new Customer(2, "james", "james", "james@gmail.com" ,10);
-            Console.WriteLine(cust.GetInfo());
+            //Person cust = new Customer(2, "james", "james", "james@gmail.com" ,10);
+            //Console.WriteLine(cust.GetInfo());
+
+            try
+            {
+                int[] arr = { 1, 2, 3, 4, 5 };
+
+                Console.WriteLine(arr[10]);
+            }
+            catch(Exception ex)
+            {
+                //log the error
+                Console.WriteLine("Run time eror" + ex.Message);
+            }
+
+
+            try
+            {
+                Employee emp = null;
+                Console.WriteLine(emp?.Id);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("error", ex.Message);
+            }
+
+            try
+            {
+                Employee employee = new Employee(101, "satya", "satya", "satya", 222);
+                employee.Salary = 1000;
+            }
+            catch(CustomException ex)
+            {
+                Console.WriteLine("custom eeror " + ex.Message);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("system Exception" + e.Message);
+            }
+
+
+            
+
+            Console.WriteLine("Next line");
 
 
         }

@@ -282,6 +282,477 @@ git checkout -b "newbranch"
 
 
 =======================
+?
+??
+?.
+inheritance
+overloading
+overriding
+	virtual 
+	override
+	new (hide)
+==================
+static class
+non-static
+
+non-static:
+	public class ClassName
+	{
+		//do your stuff
+	}
+
+create an instance here and access the methods/properties
+
+e.g.
+	ClassName obj = new ClassName(); //named object
+
+		new ClassName(); //anonymous
+
+
+e.g.
+
+public class MessageBody
+{
+	public string From {get;set;}
+	public string To {get;set;}
+	public string Subject{get;set;}
+	public string Body{get;set;}
+}
+
+public class EmailNotification
+{
+	public void SendMessage(MessageBody body)
+	{
+		//body
+		body.From
+		body.To
+		...
+		...
+	}
+}
+
+
+EmailNotification email = new EmailNotification();
+
+email.SendMessage(new MessageBody(){From="", To="", Subject="", Body=""});
+
+
+Object Initializer:
+	new ClassName(){ Property1 = value, Property2=value};
+
+Data Initializer:
+	public class Employee	
+	{
+		public int Id{get;set;}
+		public Employee()
+		{
+			this.Id = 1001;
+		}
+		
+	}
+
+
+Collection Initializer:
+	e.g.
+		List<string> names = new List<string>()
+		{
+			"Satya", "John"
+		};
+
+
+		names.Add("satya");
+		names.Add("john");
+
+non-static:
+	non static is required
+	Can create an object
+	create instance constructor
+	access the properties or methods with an object
+
+
+static class(creating utilities / helper methods)
+	public static class Helper
+	{
+		public static string GetLeftString()
+		{
+		
+		}
+
+		public static int GetDays(DateTime date1, DateTime date2)
+		{
+		}
+	}
+
+
+Helper.GetLeftString();
+Helper.GetDays(date1, date2);
+
+notes : (static class)
+	Can't create object for static  class
+	Can't add non-static members to the static class.
+	Can't extend static class
+
+
+virtual methods/non-virtual methods
+
+virtual : Overridable
+non-virtual : cann't override
+//both of these have metho defintion.
+
+e.g
+	public virtual string GetInfo()
+	{
+		//stuff
+	}
+
+	public string GetInfo()
+	{
+		//stuff
+	}
+
+"new"
+
+
+abstract method
+e.g.
+	logging in the application
+
+	logging errors 
+
+		LogError()
+		LogWarning()
+		LogInformation()
+
+public virtual void LoggError()
+{
+	//write logic to log to file
+}
+
+//need abstract method
+
+public abstract void LogError();
+
+e.g.
+
+public abstract class Logger
+{
+	public abstract void LogError(string message);
+	public abstract void LogWarning(string message);
+	public abstract void LogInformation(string message);
+
+	//concreate methods as well
+	public string GetInfo()
+	{
+	}	
+}
+
+
+publi class FileLogger : Logger
+{
+	public override void LogError(string message)
+	{
+		//write logic for file logger
+	}
+
+public override void LogInformation(string message)
+	{
+		//write logic for file logger
+	}
+
+public override void LogWarning(string message)
+	{
+		//write logic for file logger
+	}
+}
+
+
+public class DbLogger : Logger
+{
+	//implement for db logger
+}
+
+public class XmlLogger : Logger
+{
+	//implement xml logger
+}
+
+
+Logger obj = new Logger(); //error
+	obj.LogError(); //error 
+
+Logger obj = new FileLogger();
+	obj.LogError();//file logger
+	obj.GetInfo(); //default logger
+
+Logger obj = new DbLogger();
+	obj.LogError(); //db logger
+	obj.GetInfo(); //default logger
+
+
+Note:
+	abstract class
+		no instance
+		you must extend it and override all the abstract methods.
+		ability to have both abstract as well concrete methods
+
+
+Interface:
+	It's all about abstract methods/properties
+	It does not allow concrete methods
+	Here, no instance
+	You must implement interface in your service(implemenation) class and override all the abstract methods.
+
+e.g.
+	public interface ILogger
+	{
+		void LogError(string message);
+		..
+		..
+	}
+
+	by default , all methods are abstract and public in the interface.
+
+
+public class FileLogger : ILogger
+{
+		public void LogError(string message)
+		{
+		}
+}
+
+abstract class vs interface
+	abstract class , no multiple inheritance
+	interface, we can do multiple inheritance
+	
+
+public class Class1 : Class2, Class3
+{
+}	//error
+
+
+public class ServiceImplemention : ILogger, IDisposable, ICollection, ISomething
+{
+} //valid
+
+
+static class : No inheritance/no instance
+abstract class : no instance , single inheritance
+interface : no instance, multiple inheritance
+sealed class : (final class) no more inheritance
+sealed method: no more overriding
+
+Extension method : 
+
+e.g.
+	String 
+		length
+		ToUpperCase()
+		..
+		..
+
+
+	I wanna add some new method to this "existing class" and access it directly
+
+e.g.
+	public static class Extensions
+	{
+		public static string ToLeft(this string str, int count)
+		{
+			//logic
+			return string.SubString(0,count);
+		}	
+	}
+
+string str = " Hellow world";
+str.ToLeft(5);
+
+
+public class Employee
+{
+	public int Id {get;set;}
+	public string Name { get;set;}
+	public string Email {get;set;}
+}
+
+public static class Extensions
+{
+	public static string EmployeeInfo(this Employee employee)
+	{
+		return $"{employee.Id} {employee.Name} {employee.Email}";
+	}	
+}
+
+Employee employee = new Employee();
+employee.Id = 100;
+..
+..
+
+
+var result = employee.EmployeeIinfo();
+	//result
+
+
+Note
+	System
+		Object
+			It is the default base class for all types in .NET
+Object
+	virtual ToString()
+
+e.g.
+	public class Person
+	{
+		public int Id{get;set;}
+		public string Name{get;set;}
+		
+		public override string ToString()
+		{
+			return "hello world";
+		}
+		
+	}
+
+Person p = new Person(){Id = 1, Name = "Satya"};
+
+var response = p.ToString(); 
+ // 1 Satya
+
+
+===============================================================
+
+Exception Handling:
+
+try
+{
+}
+catch(IndexOutOfBoundsException ex)
+{
+}
+catch(Exception ex)
+{
+	//ex.Message
+}
+finally
+{
+	//must execute
+}
+
+
+throw new Exception("message");
+
+public class CustomException : Exception
+{
+	public CustomException(string message) : base(message)
+	{
+	}
+}
+
+
+throw new CustomException("message");
+
+=======================
+Delegates
+Lamda operator ( => )
+Collections
+Generics
+
+Delegates (function pointer)
+
+	It is a function pointer.
+	It holds the address of a method.
+	We can invoke a method with it's reference.
+	
+	Syntax of delegate is similar to mathod, but use "delegate" keyword.
+
+public/protected/private delegate returnType DelegateName(arglist);
+
+e.g.
+public delegate void EventHandler(object sender, string Message);
+public delegate int MathDelegate(int arg1, int arg2);
+
+how to create an object for delegate:
+
+DelegateName objName = new DelegateName(MethodName);
+
+e.g.
+MathDelegate mathOp = new MathDelegate(sum);
+
+
+int sum(int a, int b)
+{
+}
+
+
+Note:
+	we can use "delegate" as paramter type as well.
+	we an use "delegate" as property.
+
+How to execute delegate type? 
+	delegateObjName.Invoke(parameters);
+	delegateObjName(parameters);
+
+
+
+
+
+
+"delegate" is a reference type.
+
+class, interface, delegate are  for reference type
+enum, struct are for value type
+
+====
+Lamda operator ( => )
+	It is used for writing anonymous method.
+syntax: 
+	( (arglist) => { //logic});
+
+	( () => //logi );
+
+=================================
+
+Collections (Array)
+Generic /Non-Generic
+	Collection of Data( int, string, DateTime, complex type)
+
+Array
+	Array of int
+	Array of string
+	..
+	..
+	Fixed Length
+
+Stack (LIFO)
+	of Object type
+Queue(FIFO)
+	of ObjectType
+ArrayList(dynamic length)
+	of ObjectType
+Hashtable(dynaic length) (key - value)
+	of ObjectType
+
+Non-Generic : Type is known
+
+
+Object : 
+	It is the default base type in .NET
+
+e.g.
+	Object o = 100;
+	Object msg = "hello world":
+	object salary = 343434;
+	..
+
+	Object employee = new Employee();
+
+
+System
+	Array
+		Length
+		Sort()
+		Reverse()
+	
+=====================
 
 
 

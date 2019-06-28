@@ -753,6 +753,160 @@ System
 		Reverse()
 	
 =====================
+Object
+	object o = 100;
+	object str = " satya";
+	object value = 122.3;
+	object employee = new Employee();
+
+Object is not type-safe.
+
+We need type safe and generic type.
+We can go with generics for this purpose.
+===========================
+Generic class/interface/delegate/method 
+
+syntax : - 
+
+public class ClassName<T1, T2, T3, ...>
+{
+	public void Foo<T1>(T1 arg1, ...)
+	{
+	}
+}
+
+
+
+public class ClassName
+{
+
+	public void Foo<T>(arglist)
+	{
+
+	}
+}
+
+public interface IReposity<T>
+{
+}
+
+
+public delegate returnType DelegateName<T>(arglist);
+
+============
+
+Stack 
+	object based
+Queue
+	object base
+ArrayList
+	Object based
+Hashtable
+	Object based key-value
+
+================
+public interface IRepository<T>
+{
+	void Add(T entity);
+	void Update(T entity);
+	void Delete(T entity);
+	T Get(int id);
+	List<T> GetAll();	
+}
+
+=============
+Generic delegate
+
+public delegate returType delegateName(arglist);
+
+e.g.
+public delegte bool MathExpression(int arg);
+
+public delegate T Expression<T>(T arg);
+public delegate TResult Expression<TData, TResult>(TData arg);
+=============================================================
+
+Types(primitive types/ user defined types)
+object type (unsafe)
+collections 
+	non-generic collections (object base/ unsafe)
+	e.g.
+		Array
+		ArrayList
+		Hashtable
+		Stack
+		Queue
+			System.Collections
+
+Built in Generic Collections 
+		
+	System.Collections.Generic
+
+			List<T>
+			Dictionary<TKey,TValue>
+			Stack<T>
+			Queue<t>
+			SortedSet<T>
+			HashSet<T>
+			
+
+			IList<T>
+			ICollection<T>
+
+List<T>
+	
+	Add()
+	Remove()
+	RemoveAt()
+	RemoveAll()
+	Clear()
+	Contains()
+	Count
+
+e.g.
+	List<int> intList = new List<int>();
+		intList.Add()
+
+
+
+builtin delegates:
+	bool Predicate<T>
+	void Action<T>
+	T Func<T>
+	TResult Func<TInput, TResult>
+
+
+Dictionary<Tkey, TValue>
+
+
+Count
+Add
+ContainsKey()
+...
+
+
+IList<T>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

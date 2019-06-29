@@ -886,6 +886,169 @@ ContainsKey()
 
 
 IList<T>
+======================================================================================
+Collections
+	Generic Collections
+		List<T>
+		Dictionary<TKey, TValue>
+
+how to iterate the collections:
+
+	filter
+	sort
+	skip
+	take
+	group
+	join
+	
+
+We can create custom extensions methods on any collections and can make use of extension methods.
+
+e.g.
+	int [] arr = {1,2,3,5};
+
+built-in delegates:
+void Action<T>
+
+TResult Func<TValue, TREsult>
+
+bool Predicate<TValue>(TValue arg)
+
+
+
+public static class Extensions
+{
+	public static int[] Filter(this int []arr, Predicate<int> exp)
+	{
+		 int[] result = new int[arr.length];
+		for(var i = 0; i< arr.length; i++)
+		{
+			if(exp(arr[i]))
+				result[i]= arr[i];	
+		
+		}
+	}
+}
+
+
+int []arr = {3,1,2, 5,7};
+	arr.Filter( (arg) => arg % 2 == 0);
+=================================================
+
+For this purpose:
+	System.Linq;
+
+		It includes set of extension methods to iterate generic collections.
+
+two ways :
+	SQL kind of syntax
+		from [variable] in CollectionName [where] select [result];
+
+
+	from 
+	in
+	where
+	select
+	join
+	group by 
+	order by
+	
+
+
+
+
+	Extension methods
+		Where()
+		Select()
+		Take()/TakeWhile()
+		Skip()/SkipWhile()
+		GroupBy()
+		OrderBy()/OrderByDescending()
+		
+		Count
+		
+Note:
+	LINQ can be used for different data:
+		LINQ on Collections(object) System.Linq;
+		LINQ on SQL Data(RDBMS) (System.Data.Linq)
+		LINQ on XML (XML Data) (System.Xml.Linq)
+
+
+LINQ execution:
+	Immediate execution
+	Here, the expression get's executed immediately.
+		ToList()
+		Count()
+		Max()
+		..
+
+
+
+	Differed(Lazy) execution
+		Here, the expression get's executed only when you apply evaluation
+		e.g.
+		 	foreach()/for/while()
+			ToList()/ToArray()/Count/Max()
+
+LINQ  expression will always return "IEnumerable<T>"
+
+
+e.g
+	public class Employee
+	{
+		public int Id {get; set;}
+	}
+
+
+	new Employee() { Id = 1 }
+
+
+Anonymous type?
+	new { Property = value, ...}
+
+
+
+
+
+
+Note:
+If you want use Linq on non-generic collections, you must convert to IEnumerabl<T> type
+You can use OfType<T>() to convert non-generic collection to generic collection
+
+Note:
+
+Array
+	Fixed length list
+
+ArrayList
+	dynamic length
+	you could as many as you need.
+
+
+
+UnSafe:
+	Object
+		base type 
+		null
+		reference type
+
+	var
+		Implicit local variable (block)
+		It knows the type at compile time
+
+		var number = 1000;
+
+		Implicit (only with in method or some block)
+		We can't assign "null" to var type
+
+
+	Dynamic
+		Evaluate type at run time
+		
+dynamic value = 100;
+
+
+	
 
 
 

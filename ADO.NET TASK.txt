@@ -1,0 +1,72 @@
+TASK:
+Application Type:
+	Console Application
+
+Order Management 
+
+Intro:
+	It is used to manage an order and order details for given customer
+
+Database:	
+	OrderDb
+
+Category(Id, Name, Description)
+	Id would be primary key
+
+Product
+	Id, Name, Price, CategoryId, SupplierId
+	Id is the primary key
+	SupplierId foreign Key
+	CategoryId foreign key
+
+Supplier
+	Id
+	Name
+	Description
+
+Order 
+	Id
+	CustomerId(foreign key)
+	
+OrderDate
+
+OrderDetails
+	Id (primary key)
+	OrderId (foreign key)
+	ProductId (foreign key)
+	Qty
+Customer
+	Id (primary key)
+	FirstName
+	LastName
+	Email
+	Address
+
+
+Create the database and tables as per above:
+
+Create A Console App:
+	UI 
+		Access the BL and write user interactions(CREATE, READ, UPDATE, Delete)
+	BL
+		Implement the business logic and access DAL
+	Models
+		Create all domain classes as per database tables.
+	DAL 
+		Implement ADO logic as part of DAL
+		Implement the repositories as per each domain 
+		Write the appropriate data access logic using ADO.NET
+
+Note:
+	You can see some data to master tables
+
+e.g.
+	Category(seed some categories, as we might have some fixed categories. So that we don't need to enter categories from UI)
+	Supplier(seed some suppliers)
+	Customer(seed some customers)
+
+
+From UI:
+	You must able to add an order , provider details to that order for perticular customer.
+	You must able to query order and order details 
+	You must able to query customer and all his/her orders

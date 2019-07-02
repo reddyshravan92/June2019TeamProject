@@ -1,0 +1,470 @@
+.NET Core : 
+	AppSettings:
+
+add appsettings.json file and add keys 
+e.g.
+appsettings.json
+
+{
+  "ConnectionStrings": {
+    "DefaultConnectionString": "Data Source=localhost\\SQLEXPRESS;Initial Catalog=LearningDb;Integrated Security=true"
+  },
+  "EmailSettings": {
+    "SmtpServer": "smtp.google.com"
+  }
+}
+
+
+Once the appsettings.json file is added to the project, you set the "Copy to Output directory" to Copy Always Or Copy if newer
+
+
+Note:
+	always make sure to add "appsettings.json" as part of your UI project(console/asp.net mvc/asp.net web api).
+	Don't add in BL/DAL
+
+
+
+Add Nuget package:
+	Microsoft.Extensions.Configuration
+	Microsoft.Extensions.Configuration.FileExtensions
+	Microsoft.Extensions.Configuration.Json
+
+Import the namespace:
+	using Microsoft.Extensions.Configuration;
+
+We use : "IConfiguration"
+
+Initialize the configuration:
+
+
+
+using System;
+using System.IO;
+using Microsoft.Extensions.Configuration;
+
+namespace DemoApp
+{
+    class Program
+    {
+        private static IConfiguration configuration;
+        static void Main(string[] args)
+        {
+            Initialize();
+            Console.WriteLine(configuration.GetConnectionString("DefaultConnectionString"));
+            Console.WriteLine(configuration["EmailSettings:SmtpServer"]);
+        }
+
+
+        static void Initialize()
+        {
+            var builder = new ConfigurationBuilder()
+                           .SetBasePath(Directory.GetCurrentDirectory())
+                           .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            configuration = builder.Build();
+        }
+    }
+}
+=========
+
+How to connect the database with the UI ? 
+
+
+UI 
+
+Business Logic
+
+
+
+Database(SQL server)
+	LearningDb
+		Product
+			data 
+
+
+WE got couple Data Access API's in .Net (.net framework /.net core)
+
+e.g.
+	ADO.NET 
+	LINQ to SQL (outdated)
+	O/RM frameworks (EF , EF core)
+	NHibernate (O/RM)
+	Dapper.NET Micro O/RM(.Net core)
+
+ADO.NET
+EF Core
+Dapper.NET
+=============
+
+Configuration Settings in .NET Core application:
+	Console/ASP.NET MVC/ASP.NET Web API
+
+e.g.
+	Connections
+	Logger Settings
+	File Settings
+	Email Settings(SMTP)
+
+.NET Framework:
+	web.config (XML based)
+
+e.g.
+	<?xml version = "1.0">
+	<configuration>
+		<connectionStrings>
+		</connectionStrings>
+		<appSettings>
+		</appSettings>
+	</configuration>
+
+
+
+.NET Core:
+	appsettings.json
+
+		{
+			"ConnectionStrings":{
+				"DefaultConnectionString":"ConnectString Value"
+			},
+			"EmailSettings":{
+				"SmtpServer":"smtp.google.com"
+			},
+			"LogUrl":"http://xxxxxxxxx.com"
+		}
+
+
+How to read appsettings.json file?
+
+
+	
+
+ADO.NET Connection strings:
+
+
+
+   SqlConnection connection = new SqlConnection();
+            connection.ConnectionString = configuration.GetConnectionString("DefaultConnectionString");
+            connection.Open();
+            Console.WriteLine("connection open");
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "SELECT * FROM [Blog]";
+            cmd.CommandType = CommandType.Text;
+            cmd.Connection = connection;
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                Console.WriteLine(reader[1]);
+            }
+
+	
+		cmd.Dispose();
+            connection.Close();
+            Console.WriteLine("connection closed");
+
+
+===========================
+http://www.entityframeworktutorial.net/
+
+
+EF in .net Core:
+
+add nuget package for SQL Server:
+
+Microsoft.EntityFrameworkCore.SqlServer
+
+Microsoft.EntityFrameworkCore.Tools
+(This will allow you to execute EF Core commands for scaffolding, migration etc. directly from Package Manager Console (PMC) within Visual Studio.)
+
+
+
+//Create DbContext 
+using Microsoft.EntityFrameworkCore;
+
+
+ public class BlogDbContext : DbContext
+    {
+        public DbSet<Blog> Blogs { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(@"Data Source=.\SQLEXPRESS;Database=LearningDb;Trusted_Connection=True;");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+//Fluent API entity mapping
+            modelBuilder.Entity<Blog>().ToTable("blog", "dbo");
+        }
+    }
+
+
+//Initialize DbContext
+
+  var context = new BlogDbContext();
+            var blogs = context.Blogs.ToList();
+            Console.WriteLine(blogs.Count);
+            Console.WriteLine(blogs.FirstOrDefault()?.Title);
+
+
+//Add new entry 
+ var blog = new Blog();
+            blog.Title = ".NET Core";
+            blog.Author = "SAtya";
+            blog.CreatedBy = "Satya";
+            blog.UpdatedBy = "Satya";
+            blog.CreatedDt = DateTime.Now;
+            blog.UpdatedDt = DateTime.Now;
+
+            context.Blogs.Add(blog);
+            context.SaveChanges();
+
+	//Update an entry
+   	 var blog = context.Blogs.Where(b => b.Id == 1).FirstOrDefault();
+            blog.UpdatedBy = "satya";
+            blog.UpdatedDt = DateTime.Now;
+
+         context.Update<Blog>(blog); OR 
+	 context.Attach<Blog>(blog).State = EntityState.Modified; OR 
+	 context.Blogs.Update(blog); OR 
+         context.Entry<Blog>(blog).State = EntityState.Modified;
+
+
+
+            context.SaveChanges();
+
+//Remove an entry
+  var secondBlog = context.Blogs.Where(b => b.Id == 2).FirstOrDefault();
+            context.Blogs.Remove(secondBlog);
+  context.SaveChanges();
+
+
+
+
+Note:
+EF also provides the asynchronous SaveChangesAsync() method.
+
+Note:
+
+EF Core supports:
+	Code First Approach
+	Database First Approach
+
+
+In case of Database First Approach:
+	Create your database and schema 
+	tables, mapping and etc..
+
+then, you define the respective domain classes and configurre using fluent API
+
+e.g.
+
+Assume db:
+	LearningDb
+
+		Blog table (Id, Title, Author, CreatedDt, UpdatedDt, CreatedBy, UpdatedBy)
+
+
+EF :
+public class BlogDbContext : DbContext
+    {
+        public DbSet<Blog> Blogs { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(@"Data Source=.\SQLEXPRESS;Database=LearningDb;Trusted_Connection=True;");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+		//fluent api configurtaion
+            modelBuilder.Entity<Blog>().ToTable("blog", "dbo");
+        }
+    }
+
+
+Entity Framework Core: DbContext
+An instance of DbContext represents a session with the database which can be used to query and save instances of your entities to a database.
+
+
+public class SchoolContext : DbContext
+{
+    public SchoolContext()
+    {
+  
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+    }
+    //entities
+    public DbSet<Student> Students { get; set; }
+    public DbSet<Course> Courses { get; set; }
+} 
+
+
+
+
+Code First:
+
+Create your domain classes
+create dbcontext
+..
+
+add-migration "name"
+update-database
+
+
+Remove Pluralization ( EF )
+    modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
+
+Remove Pluralization ( EF Core)
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
+  protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            foreach (IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                entityType.Relational().TableName = entityType.DisplayName();
+            }
+        }
+
+
+
+
+Migration:
+Migration is a way to keep the database schema in sync with the EF Core model by preserving data.
+
+
+PM> add-migration MyFirstMigration
+
+	for new changes
+
+PM> Update-Database
+
+	update the changes
+
+PM> Update-database MyFirstMigration
+
+PM> remove-migration
+	
+	remove changes
+
+Generating a SQL Script
+PM> script-migration
+
+
+
+
+Scalar vs Navigation properties:
+	Scalar represents regular columns
+
+	Navigation properties represents foreign keys
+
+
+Configurations in Entity Framework Core
+There are two ways to configure domain classes in EF Core (same as in EF 6).
+
+By using Data Annotation Attributes
+By using Fluent API
+
+Data Annotation Attributes
+
+This is why these attributes are included in separate namespace System.ComponentModel.DataAnnotations.
+
+
+[Table("StudentInfo")]
+public class Student
+{
+    public Student() { }
+        
+    [Key]
+    public int SID { get; set; }
+
+    [Column("Name", TypeName="ntext")]
+    [MaxLength(20)]
+    public string StudentName { get; set; }
+
+    [NotMapped]
+    public int? Age { get; set; }
+        
+        
+    public int StdId { get; set; }
+
+    [ForeignKey("StdId")]
+    public virtual Standard Standard { get; set; }
+}
+
+
+Fluent API in Entity Framework Core
+Entity Framework Fluent API is used to configure domain classes to override conventions.
+In Entity Framework Core, the ModelBuilder class acts as a Fluent API.
+
+
+Fluent API Configurations
+
+Override the OnModelCreating method and use a parameter modelBuilder of type ModelBuilder to configure domain classes, as shown below.
+
+public class SchoolDBContext: DbContext 
+{
+    public DbSet<Student> Students { get; set; }
+        
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        //Write Fluent API configurations here
+
+        //Property Configurations
+        modelBuilder.Entity<Student>()
+                .Property(s => s.StudentId)
+                .HasColumnName("Id")
+                .HasDefaultValue(0)
+                .IsRequired();
+    }
+}
+
+
+Working with Stored Procedure in Entity Framework Core
+
+Execute Stored Procedure using ExecuteSqlCommand()
+var rowsAffected = context.Database.ExecuteSqlCommand("Update Students set FirstName = 'Bill' where StudentId = 1;");
+
+
+Eager Loading VS Lazy Loading in Entity Framework
+
+
+Eager loading is the process whereby a query for one type of entity also loads related entities as part of the query, so that we don't need to execute a separate query for related entities. Eager loading is achieved using the Include() method.
+
+   var stud1 = (from s in context.Students.Include("Standard")
+                where s.StudentName == "Bill"
+                select s).FirstOrDefault<Student>();
+
+	OR
+  var stud1 = ctx.Students
+                   .Include("Standard")
+                   .Where(s => s.StudentName == "Bill")
+                   .FirstOrDefault<Student>();
+
+
+Lazy loading is delaying the loading of related data, until you specifically request for it. It is the opposite of eager loading
+
+//Loading students only
+    IList<Student> studList = ctx.Students.ToList<Student>();
+
+    Student std = studList[0];
+
+    //Loads Student address for particular Student only (seperate SQL query)
+    StudentAddress add = std.StudentAddress;
+
+Disable Lazy Loading
+this.Configuration.LazyLoadingEnabled = false;
+
+
+
+
+
+
+

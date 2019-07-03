@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
 using System.IO;
-using System.Data;
-using System.Data.SqlClient;
-
+using Models;
+using Business;
+using DAL;
+using System.Linq;
 
 namespace AppSettingsDemo
 {
@@ -13,49 +14,27 @@ namespace AppSettingsDemo
         static void Main(string[] args)
         {
             Initialize();
-            //Console.WriteLine(configuration.GetConnectionString("DefaultConnectionString"));
-            //Console.WriteLine(configuration["EmailSettings:SmtpServer"]);
-            SqlConnection connection = null;
-            SqlCommand command = null;
-            try
-            {
-                connection = new SqlConnection();
-                connection.ConnectionString = configuration.GetConnectionString("DefaultConnectionString");
 
-                connection.Open();
-                Console.WriteLine("connetion is open");
+            DataAcccessLogic _dal = new DataAcccessLogic(configuration);
 
-                command = new SqlCommand();
-                command.CommandText = "SELECT * FROM [dbo].Product";
-                command.CommandType = CommandType.Text;
-                command.Connection = connection;
+            BusinessLogic _business = new BusinessLogic(_dal);
 
-               SqlDataReader reader = command.ExecuteReader();
+            var products = _business.GetProducts();
 
-                if(reader != null)
-                {
-                    while (reader.Read())
-                    {
-                        Console.WriteLine(reader[0] + " " + reader[1] + " " + reader[2] + " " + reader[3]);
-                    }
+            Console.WriteLine(products.Count);
+            Console.WriteLine(products.FirstOrDefault()?.Name);
 
-                    reader.Close();
-                }
+            _business.AddProduct(new Product() {Name="Keyboard", Price = 100, Category = "Hardware" });
+            _dal.Dispose();
 
-               
-                
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
 
-            finally
-            {
-                command.Dispose();
-                connection.Close();
-                Console.WriteLine("connection is closed");
-            }
+            CategoryDAL _categoryDAL = new CategoryDAL(configuration);
+            CategoryBusiness categoryBusiness = new CategoryBusiness(_categoryDAL);
+            var categories = categoryBusiness.GetCategories();
+
+            Console.WriteLine(categories.Count);
+            Console.WriteLine(categories.FirstOrDefault()?.Name);
+
         }
 
         static void Initialize()

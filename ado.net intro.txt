@@ -462,6 +462,63 @@ Lazy loading is delaying the loading of related data, until you specifically req
 Disable Lazy Loading
 this.Configuration.LazyLoadingEnabled = false;
 
+===================
+ADO.NET 
+
+SqlConnection 
+	It is the very first
+
+SqlCommand
+SqlDataReader
+	These are connected objects.
+	To use these connected objects, we need an open connection.
+	You must open explictly.
+
+	connection.Open();
+	
+	.
+	.
+	connection.Close();
+
+
+
+ADO.NET provides disconnected objects as well.
+
+e.g.
+	SqlDataAdapter 
+	SqlCommandBuilder
+
+	Here, the connection is opened/closed automatically while retrieving or saving data.
+
+e.g.
+
+SqlDataAdapter adapter = new SqlDataAdapter("query", connectionObject);
+
+Once, adapter is created, we can fill results into "DataSet"
+
+DataSet:
+	It is a collection of "DataTable" objects.
+
+DataTable
+	It is a collection "DataRow" objects.
+
+DataRow
+	It is a collection of "DataColumn" objects
+
+DataColumn
+	It is property/column
+
+
+Note:
+	Using SqlDataAdapter, we dump all the data from SqlServer(based on query)
+	into a local database(DataSet)
+
+
+
+
+
+
+
 
 
 

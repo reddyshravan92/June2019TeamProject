@@ -26,11 +26,10 @@ Supplier
 
 Order 
 	Id
-	CustomerId(foreign key)
-	
-OrderDate
+	CustomerId(foreign key)	
+	OrderDate
 
-OrderDetails
+OrderDetail
 	Id (primary key)
 	OrderId (foreign key)
 	ProductId (foreign key)
@@ -67,6 +66,6 @@ e.g.
 
 
 From UI:
-	You must able to add an order , provider details to that order for perticular customer.
+	You must able to add an order , provide details to that order for perticular customer.
 	You must able to query order and order details 
 	You must able to query customer and all his/her orders

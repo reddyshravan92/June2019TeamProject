@@ -1,0 +1,173 @@
+Database Access API:
+	ADO.NET 
+	LINQ to SQL 
+	EF/EF Core (Entity framework/Core) (O/RM)
+	Dapper.NET ( Micro O/RM) (.Net Core)
+	NHibernet.NET
+
+ADO.NET:
+	Connection /open/close
+	Command 
+	Execute commands
+	Update commands
+	..
+	..
+
+steps:
+	goto your database(SQL Server)
+		create tables
+		create SP
+		..
+		.
+
+
+.NET application:
+	DAL
+		SqlConnection 
+			add the connection string
+			Open Connection
+			..
+		SqlCommand
+			add command text
+			..
+		Execute Command 
+			read/update data
+
+		Close connection
+
+
+Insteading of writing all these things manually, we need a framework which can generate code for us.
+
+Instead of focussing on database, we need to focus on business and generate the data access code/database automatically
+
+
+We can use : EF for this
+DDD( Domain driven Development)
+
+Here, start creating domain classes, domain logic.
+EF maps domain classes with tables in the database directly.
+
+e.g.
+	class - table
+	object - row
+	property - column
+
+
+e.g.
+	//Domain class
+	public class Blog
+	{
+		public int Id {get;set;}
+		public string Title{get;set;}
+		public string Description{get;set;}
+	}
+
+When your application runs at first time, it creates a table for you.
+
+Blog
+	ID int primary key Identity
+	Title nvarchar(max)
+	Description nvarchar(max)
+
+
+Options in EF:
+	Database First (still supports)
+	Code First (still supports)
+
+Database First:
+	Here, we first create the database/tables/stored procs
+
+	then, generate the the models from existing database with EDMX tool or package manager console commands
+	OR
+		create the models and confiure with EF fluent API configuration
+Here, we don't need any migrations as we have database first.
+
+
+Code First:
+	Here, we first create the domain classes
+	configure the EF 
+	It will generate the database and respective tables automatically when you at first time.
+
+Just provider the connection string the EF.
+	which database
+	which server
+	userid
+	password 
+		OR window authentication for sql server
+=============================
+
+Steps in EF Core:
+
+	Install the package for EF core
+
+	create models 
+
+	create DbContext and initialize the connection string
+
+	configure the model with database tables.
+
+What is DbContext?
+	It is the core object for EF.
+	It is used to configure the connection strings and congifure the mapping between domain classes and tables.
+
+syntax : 
+
+public class CustomDbContext : DbContext
+{
+	public DbSet<EntityName> objectName {get;set;}
+
+	
+}
+
+DbConext ( base class)
+	virtual OnConfiguring()
+		Here, we can provide the connection string
+
+	virtual OnModelCreating()
+		here, we can configure the mapping
+		e.g.
+			entity to table
+			property to column
+			primary key
+			foreign key
+			one-many mapping
+
+To Read/Write data/to tables, we can make use of "DbSet" object
+
+e.g.
+	DbSet<EntityName> objectName {get;set;}
+
+	DbSet<Blog> Blogs {get;set;}
+		(you must configure with database table)
+
+	Blogs refer to the "blog" table in the database.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			

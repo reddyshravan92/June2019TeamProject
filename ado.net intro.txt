@@ -480,7 +480,7 @@ public class SchoolDBContext: DbContext
 Working with Stored Procedure in Entity Framework Core
 
 Execute Stored Procedure using ExecuteSqlCommand()
-var rowsAffected = context.Database.ExecuteSqlCommand("Update Students set FirstName = 'Bill' where StudentId = 1;");
+var rowsAffected = context.Database.ExecuteSqlCommand("ProcName");
 
 
 Eager Loading VS Lazy Loading in Entity Framework

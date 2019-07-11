@@ -1,0 +1,830 @@
+ASP.NET Core:
+ASP.NET Core is a cross-platform, high-performance, open-source framework for building modern, cloud-based, Internet-connected applications.
+
+With ASP.NET Core, you can:
+
+* Build web apps and services, IoT apps, and mobile backends.
+* Use your favorite development tools on Windows, macOS, and Linux.
+* Deploy to the cloud or on-premises.
+* Run on .NET Core or .NET Framework.
+* ASP.NET Core is a redesign of ASP.NET 4.x, with architectural changes that result in a leaner, more modular framework
+* A unified story for building web UI and web APIs.
+* Architected for testability.
+* Built-in dependency injection.
+* Build web APIs and web UI using ASP.NET Core MVC
+
+How to create ASP.NET Web Application? 
+Use Visual Studio 2017 OR 2019
+* Create Empty Projet
+* Create MVC web UI Project
+* Create Web API Project
+* Create ASP.NET Core Project (Razor pages)(Model and View)
+* SPA (Single Page Application)
+
+
+
+Overview of ASP.NET Core MVC:
+
+ASP.NET Core MVC is a rich framework for building web apps and APIs using the Model-View-Controller design pattern.
+
+What is the MVC pattern?
+
+The Model-View-Controller (MVC) architectural pattern separates an application into three main groups of components: Models, Views, and Controllers. 
+
+View : UI 
+Controller : BL
+Model : DAL
+
+
+This pattern helps to achieve separation of concerns. 
+
+Using this pattern, user requests are routed to a Controller which is responsible for working with the Model to perform user actions and/or retrieve results of queries. 
+
+
+The Controller chooses the View to display to the user, and provides it with any Model data it requires.
+
+
+Request ===> Controller 
+	Controller => Model => database 
+	Controller <== Model <== database
+	<== Controller does some I/O (validation)
+	<== controller returns a view with model data
+UI(final view)
+
+e.g.
+	https://localhost:3333/Blog/Index
+
+	Request goes to "Blog" controller , then "Index" action, then it reads the data from the Model	
+	return model data to the view
+	return view to the user
+
+
+
+
+Let's start with Empty Project
+
+
+Steps:
+File -> New -> Project -> ASP.Net Core Web Application -> Empty
+
+Once Empty Project is created: Enable MVC Support
+
+Open Startup.cs file:
+using Microsoft.AspNetCore.Mvc;
+
+
+ public void ConfigureServices(IServiceCollection services)
+        {
+services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+        }
+
+
+Configure the default route:
+
+ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+        
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
+        }
+
+With this your project is ready for MVC support.
+
+How to add controllers:
+
+Create a new folder (Controllers)
+	Add =>  Controller => HomeController
+
+ public class HomeController : Controller
+ {
+ }
+
+
+How to create Action Method? 
+
+public IActionResult Index()
+{
+	return View();
+}
+
+
+How to add view? 
+
+Right click on Action method => Add View => Give a name for view ("Index") and leave other fields empty
+
+it creates views for you :
+	Views
+		Home
+			Index.cshtml
+
+	update your view accordingly.
+
+
+Note:
+By Default, ASP.NET MVC uses Razor view engine for rendering views.
+
+Use IActionResult OR ActionResult reutrntype to render a View and Use "View()" method.
+
+=============
+project files:
+
+wwwroot folder
+	Contains static files, such as HTML files, JavaScript files, and CSS files
+
+
+appSettings.json
+	Contains configuration data, such as connection strings.
+
+Program.cs
+	Contains the entry point for the program. 
+
+Startup.cs
+	Contains code that configures app behavior.
+
+
+
+
+ASP.NET Core fundamentals
+
+The Startup class:
+
+* Services required by the app are configured.
+* The request handling pipeline is defined.
+
+public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddMvc()
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+        services.AddDbContext<MovieContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("MovieDb")));
+    }
+
+    public void Configure(IApplicationBuilder app)
+    {
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+        app.UseMvc();
+    }
+}
+
+
+Environments
+
+Execution environments, such as Development, Staging, and Production, are a first-class notion in ASP.NET Core. 
+
+You can specify the environment an app is running in by setting the ASPNETCORE_ENVIRONMENT environment variable. ASP.NET Core reads that environment variable at app startup and stores the value in an IHostingEnvironment implementation. The environment object is available anywhere in the app via DI.
+
+public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+{
+    if (env.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+    }
+    else
+    {
+        app.UseExceptionHandler("/Error");
+        app.UseHsts();
+    }
+
+    app.UseHttpsRedirection();
+    app.UseStaticFiles();
+    app.UseMvc();
+}
+
+===========
+Routing basics:
+Convention-based routing enables you to globally define the URL formats that your application accepts and how each of those formats maps to a specific action method on given controller.
+
+The default conventional route {controller=Home}/{action=Index}/{id?}
+
+app.UseMvc(routes =>
+{
+    routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+});
+
+
+routes.MapRoute(
+    name: "default_route",
+    template: "{controller}/{action}/{id?}",
+    defaults: new { controller = "Home", action = "Index" });
+
+routes.MapRoute(
+    name: "default_route",
+    template: "{controller=Home}/{action=Index}/{id?}");
+
+
+Attribute routing:
+
+public class HomeController : Controller
+{
+   [Route("")]
+   [Route("Home")]
+   [Route("Home/Index")]
+   public IActionResult Index()
+   {
+      return View();
+   }
+   [Route("Home/About")]
+   public IActionResult About()
+   {
+      return View();
+   }
+   [Route("Home/Contact")]
+   public IActionResult Contact()
+   {
+      return View();
+   }
+}
+
+
+Note: Will use this in Web API (Attribute routing)
+
+Attribute routing enables you to specify routing information by decorating your controllers and actions with attributes that define your application's routes. This means that your route definitions are placed next to the controller and action with which they're associated.
+[Route("api/[controller]")]
+public class ProductsController : Controller
+{
+  [HttpGet("{id}")]
+  public IActionResult GetProduct(int id)
+  {
+    ...
+  }
+}
+
+
+Model binding
+ASP.NET Core MVC model binding converts client request data (form values, route data, query string parameters, HTTP headers) into objects that the controller can handle. 
+
+As a result, your controller logic doesn't have to do the work of figuring out the incoming request data; it simply has the data as parameters to its action methods.
+
+public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null) { ... }
+
+
+Model validation
+ASP.NET Core MVC supports validation by decorating your model object with data annotation validation attributes. 
+
+The validation attributes are checked on the client side before values are posted to the server, as well as on the server before the controller action is called.
+using System.ComponentModel.DataAnnotations;
+public class LoginViewModel
+{
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; }
+
+    [Required]
+    [DataType(DataType.Password)]
+    public string Password { get; set; }
+
+    [Display(Name = "Remember me?")]
+    public bool RememberMe { get; set; }
+}
+
+public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+{
+    if (ModelState.IsValid)
+    {
+      // work with the model
+    }
+    // At this point, something failed, redisplay form
+    return View(model);
+}
+
+Tag Helpers
+<a asp-controller="Account" asp-action="Login">Click here to Log in</a>.
+
+
+Views in ASP.NET Core MVC:
+In the Model-View-Controller (MVC) pattern, the view handles the app's data presentation and user interaction. A view is an HTML template with embedded Razor markup. 
+Razor markup is code that interacts with HTML markup to produce a webpage that's sent to the client.
+
+Types of views:
+Partial Views
+Layouts 
+View components
+
+How controllers specify views:
+Views are typically returned from actions as a ViewResult, which is a type of ActionResult.
+
+public IActionResult About()
+{
+    ViewData["Message"] = "Your application description page.";
+
+    return View();
+}
+
+The View helper method has several overloads. You can optionally specify:
+
+An explicit view to return:
+	return View("Orders");
+
+A model to pass to the view:
+	return View(Orders);
+
+Both a view and a model:
+	return View("Orders", Orders);
+
+Note: A view file path can be provided instead of a view name
+	return View("Views/Home/About.cshtml");
+
+
+Passing data to views
+Strongly typed data: viewmodel
+Weakly typed data
+	ViewData (ViewDataAttribute)
+	ViewBag
+
+
+
+
+Strongly typed data (viewmodel)
+
+namespace WebApplication1.ViewModels
+{
+    public class Address
+    {
+        public string Name { get; set; }
+        public string Street { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string PostalCode { get; set; }
+    }
+}
+
+
+public IActionResult Contact()
+{
+    ViewData["Message"] = "Your contact page.";
+
+    var viewModel = new Address()
+    {
+        Name = "Microsoft",
+        Street = "One Microsoft Way",
+        City = "Redmond",
+        State = "WA",
+        PostalCode = "98052-6399"
+    };
+
+    return View(viewModel);
+}
+
+
+@model WebApplication1.ViewModels.Address
+
+Weakly typed data (ViewData, ViewData attribute, and ViewBag)
+
+Note: ViewBag isn't available in Razor Pages.
+
+
+The ViewData property is a dictionary of weakly typed objects. 
+The ViewBag property is a wrapper around ViewData that provides dynamic properties for the underlying ViewData collection.
+
+ViewData and ViewBag are dynamically resolved at runtime. 
+Since they don't offer compile-time type checking, both are generally more error-prone than using a viewmodel
+
+ViewData
+ViewData is a ViewDataDictionary object accessed through string keys.
+
+public IActionResult SomeAction()
+{
+    ViewData["Greeting"] = "Hello";
+    ViewData["Address"]  = new Address()
+    {
+        Name = "Steve",
+        Street = "123 Main St",
+        City = "Hudson",
+        State = "OH",
+        PostalCode = "44236"
+    };
+
+    return View();
+}
+
+Work with the data in a view:
+
+@{
+    // Since Address isn't a string, it requires a cast.
+    var address = ViewData["Address"] as Address;
+}
+
+@ViewData["Greeting"] World!
+
+<address>
+    @address.Name<br>
+    @address.Street<br>
+    @address.City, @address.State @address.PostalCode
+</address>
+
+
+ViewData attribute
+
+public class HomeController : Controller
+{
+    [ViewData]
+    public string Title { get; set; }
+
+    public IActionResult About()
+    {
+        Title = "About Us";
+        ViewData["Message"] = "Your application description page.";
+
+        return View();
+    }
+}
+
+
+In the About view, access the Title property as a model property:
+<h1>@Model.Title</h1>
+
+
+ViewBag
+ViewBag isn't available in Razor Pages.
+
+ViewBag is a DynamicViewData object that provides dynamic access to the objects stored in ViewData
+
+public IActionResult SomeAction()
+{
+    ViewBag.Greeting = "Hello";
+    ViewBag.Address  = new Address()
+    {
+        Name = "Steve",
+        Street = "123 Main St",
+        City = "Hudson",
+        State = "OH",
+        PostalCode = "44236"
+    };
+
+    return View();
+}
+@ViewBag.Greeting World!
+
+<address>
+    @ViewBag.Address.Name<br>
+    @ViewBag.Address.Street<br>
+    @ViewBag.Address.City, @ViewBag.Address.State @ViewBag.Address.PostalCode
+</address>
+
+
+Summary of the differences between ViewData and ViewBag
+ViewBag isn't available in the Razor Pages.
+
+
+ViewData
+Derives from ViewDataDictionary, so it has dictionary properties that can be useful, such as ContainsKey, Add, Remove, and Clear.
+Keys in the dictionary are strings, so whitespace is allowed. Example: ViewData["Some Key With Whitespace"]
+Any type other than a string must be cast in the view to use ViewData.
+
+ViewBag
+Derives from DynamicViewData, so it allows the creation of dynamic properties using dot notation (@ViewBag.SomeKey = <value or object>), and no casting is required. The syntax of ViewBag makes it quicker to add to controllers and views.
+Simpler to check for null values. Example: @ViewBag.Person?.Name
+
+
+
+Dynamic views
+
+Views that don't declare a model type using @model but that have a model instance passed to them (for example, return View(Address);) can reference the instance's properties dynamically:
+
+<address>
+    @Model.Street<br>
+    @Model.City, @Model.State @Model.PostalCode<br>
+    <abbr title="Phone">P:</abbr> 425.555.0100
+</address>
+
+====================
+
+Partial views in ASP.NET Core
+
+A partial view is a Razor markup file (.cshtml) that renders HTML output within another markup file's rendered output.
+
+
+<partial name="_PartialName" />
+
+OR
+
+<partial name="_PartialName.cshtml" />
+
+<partial name="~/Views/Folder/_PartialName.cshtml" />
+<partial name="/Views/Folder/_PartialName.cshtml" />
+
+
+
+Layout in ASP.NET Core
+
+
+Views frequently share visual and programmatic elements.
+
+Controller with views: Views/Shared/_Layout.cshtml
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebApplication1</title>
+</head>
+<body>
+   <header>
+   </header>
+
+    <div class="container">
+        @RenderBody()         
+    </div>
+	 <footer>
+            <p>&copy; 2018 - WebApplication1</p>
+        </footer>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
+
+
+
+Specifying a Layout
+Razor views have a Layout property. Individual views specify a layout by setting this property:
+
+@{
+    Layout = "_Layout";
+}
+
+Sections
+A layout can optionally reference one or more sections, by calling RenderSection. 
+Sections provide a way to organize where certain page elements should be placed. 
+Each call to RenderSection can specify whether that section is required or optional:
+
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}
+
+An example @section definition in Razor Pages view:
+
+@section Scripts {
+     <script type="text/javascript" src="/scripts/main.js"></script>
+}
+
+Running Code Before Each View
+Code that needs to run before each view or page should be placed in the _ViewStart.cshtml file.
+A sample _ViewStart.cshtml file:
+
+@{
+    Layout = "_Layout";
+}
+
+Razor syntax reference for ASP.NET Core
+
+Razor is a markup syntax for embedding server-based code into webpages. 
+The Razor syntax consists of Razor markup, C#, and HTML. 
+Files containing Razor generally have a .cshtml file extension.
+
+Razor syntax
+
+Razor supports C# and uses the @ symbol to transition from HTML to C#. 
+
+To escape an @ symbol in Razor markup, use a second @ symbol:
+<p>@@Username</p>
+
+
+Implicit Razor expressions
+
+<p>@DateTime.Now</p>
+<p>@DateTime.IsLeapYear(2016)</p>
+
+
+Explicit expressions can be used to concatenate text with an expression result:
+
+@{
+    var joe = new Person("Joe", 33);
+}
+
+<p>Age@(joe.Age)</p>
+
+
+Conditionals @if, else if, else, and @switch
+
+@if (value % 2 == 0)
+{
+    <p>The value was even.</p>
+}
+
+
+@if (value % 2 == 0)
+{
+    <p>The value was even.</p>
+}
+else if (value >= 1337)
+{
+    <p>The value is large.</p>
+}
+else
+{
+    <p>The value is odd and small.</p>
+}
+
+
+@switch (value)
+{
+    case 1:
+        <p>The value is 1!</p>
+        break;
+    case 1337:
+        <p>Your number is 1337!</p>
+        break;
+    default:
+        <p>Your number wasn't 1 or 1337.</p>
+        break;
+}
+
+Looping @for, @foreach, @while, and @do while
+@{
+    var people = new Person[]
+    {
+          new Person("Weston", 33),
+          new Person("Johnathon", 41),
+          ...
+    };
+}
+
+@for (var i = 0; i < people.Length; i++)
+{
+    var person = people[i];
+    <p>Name: @person.Name</p>
+    <p>Age: @person.Age</p>
+}
+
+@foreach (var person in people)
+{
+    <p>Name: @person.Name</p>
+    <p>Age: @person.Age</p>
+}
+
+@{ var i = 0; }
+@while (i < people.Length)
+{
+    var person = people[i];
+    <p>Name: @person.Name</p>
+    <p>Age: @person.Age</p>
+
+    i++;
+}
+
+Compound @using
+In C#, a using statement is used to ensure an object is disposed.
+
+@using (Html.BeginForm())
+{
+    <div>
+        email:
+        <input type="email" id="Email" value="">
+        <button>Register</button>
+    </div>
+}
+
+@try, catch, finally
+
+@try
+{
+    throw new InvalidOperationException("You did something invalid.");
+}
+catch (Exception ex)
+{
+    <p>The exception message: @ex.Message</p>
+}
+finally
+{
+    <p>The finally statement.</p>
+}
+
+
+@using
+The @using directive adds the C# using directive to the generated view:
+
+@using System.IO
+@{
+    var dir = Directory.GetCurrentDirectory();
+}
+<p>@dir</p>
+
+@model
+The @model directive specifies the type of the model passed to a view:
+
+@model TypeNameOfModel
+
+Razor exposes a Model property for accessing the model passed to the view:
+
+<div>The Login Email: @Model.Email</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=============================
+EF Core in ASP.NET Core MVC:
+
+ services.AddDbContext<MvcMovieContext>(options =>
+         options.UseSqlServer(Configuration.GetConnectionString("MvcMovieContext")));
+
+ public class MvcMovieContext : DbContext
+    {
+        public MvcMovieContext (DbContextOptions<MvcMovieContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<MvcMovie.Models.Movie> Movie { get; set; }
+    }
+
+services.AddDbContext<MvcMovieContext>(options => specifies the database to use and the connection string.
+
+
+
+
+The preceding highlighted code shows the movie database context being added to the Dependency Injection container:
+
+public class MoviesController : Controller
+{
+    private readonly MvcMovieContext _context;
+
+    public MoviesController(MvcMovieContext context)
+    {
+        _context = context;
+    }
+}
+
+The constructor uses Dependency Injection to inject the database context (MvcMovieContext) into the controller. The database context is used in each of the CRUD methods in the controller.
+
+
+
+
+Dependency injection in ASP.NET Core
+ASP.NET Core supports the dependency injection (DI) software design pattern, which is a technique for achieving Inversion of Control (IoC) between classes and their dependencies.
+
+A dependency is any object that another object requires.
+
+
+e.g.
+public interface IMyDependency
+{
+    Task WriteMessage(string message);
+}
+
+
+public class MyDependency : IMyDependency
+{
+
+    public Task WriteMessage(string message)
+    {
+     	//implement logic here
+        return Task.FromResult(0);
+    }
+}
+
+
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+    services.AddScoped<IMyDependency, MyDependency>();
+
+
+}
+
+Service lifetimes
+Choose an appropriate lifetime for each registered service. 
+ASP.NET Core services can be configured with the following lifetimes:
+
+
+Transient
+Transient lifetime services (AddTransient) are created each time they're requested from the service container. This lifetime works best for lightweight, stateless services.
+
+Scoped
+Scoped lifetime services (AddScoped) are created once per client request (connection).
+
+
+Singleton
+Singleton lifetime services (AddSingleton) are created the first time they're requested (or when Startup.ConfigureServices is run and an instance is specified with the service registration). Every subsequent request uses the same instance.
+
+
+

@@ -162,9 +162,7 @@ public class Startup
     {
         services.AddMvc()
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-        services.AddDbContext<MovieContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("MovieDb")));
+      
     }
 
     public void Configure(IApplicationBuilder app)
@@ -180,7 +178,9 @@ Environments
 
 Execution environments, such as Development, Staging, and Production, are a first-class notion in ASP.NET Core. 
 
-You can specify the environment an app is running in by setting the ASPNETCORE_ENVIRONMENT environment variable. ASP.NET Core reads that environment variable at app startup and stores the value in an IHostingEnvironment implementation. The environment object is available anywhere in the app via DI.
+You can specify the environment an app is running in by setting the ASPNETCORE_ENVIRONMENT environment variable. 
+
+ASP.NET Core reads that environment variable at app startup and stores the value in an IHostingEnvironment implementation. The environment object is available anywhere in the app via DI.
 
 public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 {
@@ -222,6 +222,9 @@ routes.MapRoute(
 
 
 Attribute routing:
+Attribute routing enables you to specify routing information by decorating your controllers and actions with attributes that define your application's routes. 
+
+This means that your route definitions are placed next to the controller and action with which they're associated.
 
 public class HomeController : Controller
 {
@@ -245,9 +248,9 @@ public class HomeController : Controller
 }
 
 
-Note: Will use this in Web API (Attribute routing)
 
-Attribute routing enables you to specify routing information by decorating your controllers and actions with attributes that define your application's routes. This means that your route definitions are placed next to the controller and action with which they're associated.
+
+
 [Route("api/[controller]")]
 public class ProductsController : Controller
 {
@@ -258,11 +261,20 @@ public class ProductsController : Controller
   }
 }
 
+/api/products/1
+
+
+HttpGet("")
+HttpPost("")
+HttpDelete("")
+HttpPut("")
+
 
 Model binding
 ASP.NET Core MVC model binding converts client request data (form values, route data, query string parameters, HTTP headers) into objects that the controller can handle. 
 
-As a result, your controller logic doesn't have to do the work of figuring out the incoming request data; it simply has the data as parameters to its action methods.
+As a result, your controller logic doesn't have to do the work of figuring out the incoming request data;
+it simply has the data as parameters to its action methods.
 
 public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null) { ... }
 
@@ -271,6 +283,7 @@ Model validation
 ASP.NET Core MVC supports validation by decorating your model object with data annotation validation attributes. 
 
 The validation attributes are checked on the client side before values are posted to the server, as well as on the server before the controller action is called.
+
 using System.ComponentModel.DataAnnotations;
 public class LoginViewModel
 {
@@ -296,15 +309,13 @@ public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = 
     return View(model);
 }
 
-Tag Helpers
-<a asp-controller="Account" asp-action="Login">Click here to Log in</a>.
-
 
 Views in ASP.NET Core MVC:
 In the Model-View-Controller (MVC) pattern, the view handles the app's data presentation and user interaction. A view is an HTML template with embedded Razor markup. 
 Razor markup is code that interacts with HTML markup to produce a webpage that's sent to the client.
 
 Types of views:
+
 Partial Views
 Layouts 
 View components
@@ -334,7 +345,8 @@ Note: A view file path can be provided instead of a view name
 	return View("Views/Home/About.cshtml");
 
 
-Passing data to views
+Passing data to views:
+
 Strongly typed data: viewmodel
 Weakly typed data
 	ViewData (ViewDataAttribute)
@@ -406,7 +418,7 @@ public IActionResult SomeAction()
     return View();
 }
 
-Work with the data in a view:
+Working with the data in a view:
 
 @{
     // Since Address isn't a string, it requires a cast.

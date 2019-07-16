@@ -311,14 +311,53 @@ public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = 
 
 
 Views in ASP.NET Core MVC:
+
 In the Model-View-Controller (MVC) pattern, the view handles the app's data presentation and user interaction. A view is an HTML template with embedded Razor markup. 
+
 Razor markup is code that interacts with HTML markup to produce a webpage that's sent to the client.
 
 Types of views:
 
 Partial Views
-Layouts 
+Layout views(master page)
 View components
+
+
+If you want to share common data across the views, you can make use of Layout views.
+
+Views
+	Shared
+		_Layout.cshtml
+
+	Here, you define the site structure(header/footer, sidebar, main section)
+
+Once, layout is ready you can share it across the application.
+
+Note:
+	only this layout view contains the html root level elements.
+
+	You could create multiple layout views as well.
+
+
+	Use @RenderBody(), to create content place holders.
+
+
+Note: View(.cshtml)
+
+<!doctype html>
+<html>
+	<head>
+		<title>page title</title>
+		<meta />
+		<link />
+		<style>
+		</style>
+		<script>
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
 
 How controllers specify views:
 Views are typically returned from actions as a ViewResult, which is a type of ActionResult.
@@ -348,7 +387,9 @@ Note: A view file path can be provided instead of a view name
 Passing data to views:
 
 Strongly typed data: viewmodel
-Weakly typed data
+	(It provides compile time type checking)
+
+Weakly typed data : It uses dynamic object to pass data (no compile time type checking)
 	ViewData (ViewDataAttribute)
 	ViewBag
 
@@ -388,6 +429,7 @@ public IActionResult Contact()
 
 
 @model WebApplication1.ViewModels.Address
+
 
 Weakly typed data (ViewData, ViewData attribute, and ViewBag)
 
@@ -496,18 +538,6 @@ ViewBag
 Derives from DynamicViewData, so it allows the creation of dynamic properties using dot notation (@ViewBag.SomeKey = <value or object>), and no casting is required. The syntax of ViewBag makes it quicker to add to controllers and views.
 Simpler to check for null values. Example: @ViewBag.Person?.Name
 
-
-
-Dynamic views
-
-Views that don't declare a model type using @model but that have a model instance passed to them (for example, return View(Address);) can reference the instance's properties dynamically:
-
-<address>
-    @Model.Street<br>
-    @Model.City, @Model.State @Model.PostalCode<br>
-    <abbr title="Phone">P:</abbr> 425.555.0100
-</address>
-
 ====================
 
 Partial views in ASP.NET Core
@@ -582,7 +612,8 @@ An example @section definition in Razor Pages view:
 }
 
 Running Code Before Each View
-Code that needs to run before each view or page should be placed in the _ViewStart.cshtml file.
+Code that needs to run before each view or page should be placed in the 
+_ViewStart.cshtml file.
 A sample _ViewStart.cshtml file:
 
 @{

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29025.244
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASPNETCoreModelsDemo", "ASPNETCoreModelsDemo\ASPNETCoreModelsDemo.csproj", "{8CAE7052-DC8D-4358-B65B-CC200CB7B0E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8CAE7052-DC8D-4358-B65B-CC200CB7B0E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CAE7052-DC8D-4358-B65B-CC200CB7B0E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CAE7052-DC8D-4358-B65B-CC200CB7B0E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CAE7052-DC8D-4358-B65B-CC200CB7B0E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {865A2E11-12D3-4340-AA9A-18C50BCC860D}
+	EndGlobalSection
+EndGlobal

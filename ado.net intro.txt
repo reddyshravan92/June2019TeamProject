@@ -275,6 +275,7 @@ using Microsoft.EntityFrameworkCore;
 
          context.Update<Blog>(blog); OR 
 	 context.Attach<Blog>(blog).State = EntityState.Modified; OR 
+
 	 context.Blogs.Update(blog); OR 
          context.Entry<Blog>(blog).State = EntityState.Modified;
 

@@ -1,17 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Models;
+
 namespace DataAccess
 {
     public class BlogDbContext : DbContext
     {
+        private readonly string _connectionString;
+        public BlogDbContext(string connectionString)
+        {
+            this._connectionString = connectionString;
+        }
+
         public DbSet<Blog> Blogs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=.\SQLEXPRESS;Database=BlogPostDb;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(this._connectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

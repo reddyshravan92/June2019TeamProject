@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASPNETEFCoreDemo", "ASPNETEFCoreDemo\ASPNETEFCoreDemo.csproj", "{FB817A4A-7170-4FD1-BCBE-595B8B53F7F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASPNETEFCoreDemo", "ASPNETEFCoreDemo\ASPNETEFCoreDemo.csproj", "{FB817A4A-7170-4FD1-BCBE-595B8B53F7F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{36E4E335-E46D-47D8-9C75-0C8E844C6615}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{36E4E335-E46D-47D8-9C75-0C8E844C6615}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{4C869B1C-6275-40EC-B89F-ED9CD021AFC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{4C869B1C-6275-40EC-B89F-ED9CD021AFC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business", "Business\Business.csproj", "{00F07188-845C-4BBF-A68F-78EDBCD9376D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "Contracts\Contracts.csproj", "{BDA3A854-C367-4497-BCDB-CE9B64178672}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{4C869B1C-6275-40EC-B89F-ED9CD021AFC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C869B1C-6275-40EC-B89F-ED9CD021AFC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C869B1C-6275-40EC-B89F-ED9CD021AFC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00F07188-845C-4BBF-A68F-78EDBCD9376D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00F07188-845C-4BBF-A68F-78EDBCD9376D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00F07188-845C-4BBF-A68F-78EDBCD9376D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00F07188-845C-4BBF-A68F-78EDBCD9376D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDA3A854-C367-4497-BCDB-CE9B64178672}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDA3A854-C367-4497-BCDB-CE9B64178672}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDA3A854-C367-4497-BCDB-CE9B64178672}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDA3A854-C367-4497-BCDB-CE9B64178672}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,346 @@
+Web APIs with ASP.NET Core:
+
+Introduction:
+
+RESTful Services:
+
+.NET Core Console applications (CUI)
+.NET Core Class Library (.dll)
+ASP.NET Core MVC Web applications (Traditional Web Application)(Multi-Page application)
+	Tight Coupled Web Applications(UI / Server side logic coupled together)
+	Razor views (dynamic views)
+		HTML + C#
+
+		.NET core compiler && IIS will render the respective HTML.
+
+What if you want to access the same data in different UI's.?
+
+e.g.
+	Web UI
+	Single Page aplication
+	Desktop application
+	Native Mobile application
+
+
+We need a single resource, which can be accessed from any UI.
+
+For this purpose, we can make use of : RESTful API
+
+We need to build a service as stateless , data based resouce, which would return/accept some data from various UI's.
+
+Here, data format could be of : XML, JSON or any custom format.
+This service must be based on Http verbs.
+
+HttpGet
+HttpPost
+HttpPut
+HttpDelete
+
+Build an API , which would return some JSON Data(So, you can map with HttpGet)
+Build an API, which would accept some JSON Data(here, you can map with HttpPost)
+
+Creating a new entry : HttpPost
+Get some data : HttpGet
+Updating some data : HttpPut
+Deleting some data: HttpDelete
+
+.NET had different technologies for this Services:
+	ASMX web services ( XML web services)(XML, SOAP)(.asmx)
+	WCF Windows Communication foundation (.NET 3.5) (.svc)(RESTful service)
+	ASP.NET Web API(API RESTful)
+	
+ASP.NET Core (Unified frameowork for both MVC and API)
+
+
+In the .NET framework : 
+		ASP.NET MVC ( MVC web application) - different packages(.dll's)
+		ASP.NET Web API (RESTfull services) - different packages(.dll's)
+
+
+ASP.NET Core(Unified web framework)
+	We use the same package(.dll) for creating either MVC web application or RESTful services.
+
+package:
+	Microsoft.AspNetCore.Mvc
+
+e.g.
+	ControllerBase(for API's)
+	Controller (for MVC web application)
+
+ReturnType of Action methods:
+	for MVC : (UI)
+			ActionResult/IActionResult/ViewResult
+				return view()
+
+
+	for API:(No UI)
+			some data type(IEnumerable/IList/string/..)
+				return data;
+
+
+=============================
+
+ASP.NET Core supports creating RESTful services, also known as web APIs
+To handle requests, a web API uses controllers. 
+Controllers in a web API are classes that derive from ControllerBase.
+
+
+ControllerBase class
+
+
+A web API has one or more controller classes that derive from ControllerBase. 
+
+[Route("api/[controller]")]
+[ApiController]
+public class ValuesController : ControllerBase
+
+
+
+Note:
+Don't create a web API controller by deriving from the Controller class. 
+Controller derives from ControllerBase and adds support for views, so it's for handling web pages, not web API requests. 
+
+There's an exception to this rule: if you plan to use the same controller for both views and APIs, derive it from Controller.
+
+
+Attributes
+
+
+The Microsoft.AspNetCore.Mvc namespace provides attributes that can be used to configure the behavior of web API controllers and action methods.
+
+[HttpPost]
+[ProducesResponseType(StatusCodes.Status201Created)]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
+public ActionResult<Pet> Create(Pet pet)
+{
+    pet.Id = _petsInMemoryStore.Any() ? _petsInMemoryStore.Max(p => p.Id) + 1 : 1;
+    _petsInMemoryStore.Add(pet);
+
+    return CreatedAtAction(nameof(GetById),
+        new { id = pet.Id }, pet);
+}
+
+
+[Produces]	Specifies data types that an action returns.
+
+
+
+ApiController attribute
+
+The [ApiController] attribute can be applied to a controller class to enable API-specific behaviors:
+
+Attribute routing requirement
+Automatic HTTP 400 responses
+Binding source parameter inference
+Multipart/form-data request inference
+Problem details for error status codes
+
+
+
+ApiController on specific controllers
+
+[Route("api/[controller]")]
+[ApiController]
+public class ValuesController : ControllerBase
+
+
+
+ApiController on multiple controllers
+
+[ApiController]
+public class MyControllerBase : ControllerBase
+{
+}
+
+
+[Produces("application/json")]
+[Route("api/[controller]")]
+public class PetsController : MyControllerBase
+
+
+
+ApiController on an assembly
+
+
+[assembly: ApiController]
+namespace WebApiSample
+{
+    public class Startup
+    {
+        ...
+    }
+}
+
+Attribute routing requirement
+[Route("api/[controller]")]
+[ApiController]
+public class ValuesController : ControllerBase
+
+
+
+Automatic HTTP 400 responses
+
+if (!ModelState.IsValid)
+{
+    return BadRequest(ModelState);
+}
+
+
+
+
+
+
+Binding source parameter inference
+A binding source attribute defines the location at which an action parameter's value is found. 
+
+The following binding source attributes exist:
+
+
+[FromBody]	Request body
+[FromForm]	Form data in the request body
+[FromHeader]	Request header
+[FromQuery]	Request query string parameter
+[FromRoute]	Route data from the current request
+
+
+e.g.
+[HttpGet]
+public ActionResult<List<Product>> Get(
+    [FromQuery] bool discontinuedOnly = false)
+{
+    List<Product> products = null;
+
+    if (discontinuedOnly)
+    {
+        products = _productsInMemoryStore.Where(p => p.IsDiscontinued).ToList();
+    }
+    else
+    {
+        products = _productsInMemoryStore;
+    }
+
+    return products;
+}
+
+FromBody inference notes
+[HttpPost]
+public IActionResult Action2(Product product)
+
+
+
+Return values
+ASP.NET Core automatically serializes the object to JSON and writes the JSON into the body of the response message. 
+ActionResult return types can represent a wide range of HTTP status codes.
+
+ASP.NET Core offers the following options for Web API controller action return types:
+
+Specific type
+IActionResult
+ActionResult<T>
+
+
+Specific type
+The simplest action returns a primitive or complex data type (for example, string or a custom object type). 
+
+[HttpGet]
+public IEnumerable<Product> Get()
+{
+    return _repository.GetProducts();
+}
+
+
+IActionResult type
+
+The IActionResult return type is appropriate when multiple ActionResult return types are possible in an action
+
+The ActionResult types represent various HTTP status codes. 
+Some common return types falling into this category are BadRequestResult (400), NotFoundResult (404), and OkObjectResult (200).
+
+Because there are multiple return types and paths in the action, liberal use of the [ProducesResponseType] attribute is necessary.
+
+[HttpGet("{id}")]
+[ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status404NotFound)]
+public IActionResult GetById(int id)
+{
+    if (!_repository.TryGetProduct(id, out var product))
+    {
+        return NotFound();
+    }
+
+    return Ok(product);
+}
+
+ActionResult<T> type
+
+It enables you to return a type deriving from ActionResult or return a specific type.
+
+[HttpGet]
+public ActionResult<IEnumerable<Product>> Get()
+{
+    return _repository.GetProducts();
+}
+
+
+
+
+
+Asynchronous Action methods :
+
+public interface IBlogRepository
+    {
+        Task<List<Blog>> GetBlogs();
+        Task AddBlog(Blog entity);
+    }
+    public class BlogRepository : IBlogRepository
+    {
+        private readonly IList<Blog> blogs;
+        public BlogRepository()
+        {
+            blogs = new List<Blog>()
+            {
+                new Blog()
+                {
+                    Id = 1,
+                    Title ="ASP.NET core",
+                    Author = "Satya"
+                },
+                new Blog()
+                {
+                    Id = 2,
+                    Title = "Asp.NET web api",
+                    Author = "scott"
+                }
+            };
+        }
+
+        public async Task<List<Blog>> GetBlogs()
+        {
+            await Task.Run(() => { });
+            return this.blogs.ToList();
+        }
+
+       public async Task AddBlog(Blog entity)
+        {
+            await Task.Run(() => { });
+            this.blogs.Add(entity);
+        }
+    }
+
+	
+	[HttpGet]
+        public async Task<IEnumerable<Blog>> Get()
+        {
+            return await repository.GetBlogs();
+        }
+
+
+	[HttpPost]
+        public async Task Post(Blog blog)
+        {
+           await repository.AddBlog(blog);
+        }
+
+
+
+
